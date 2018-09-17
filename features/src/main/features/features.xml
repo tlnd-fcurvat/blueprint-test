@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="test-features" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="test" version="1.0-SNAPSHOT">
+        <config name="my.config">
+            TST1=VL1
+            TST2=VL2
+        </config>
+        <bundle>mvn:net.nanthrax.test/my.bundle/${project.version}</bundle>
+    </feature>
+
+</features>
