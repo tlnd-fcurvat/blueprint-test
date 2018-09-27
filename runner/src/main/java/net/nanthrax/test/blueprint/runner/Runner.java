@@ -8,6 +8,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 
 import java.net.URI;
 import java.util.Dictionary;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class Runner {
     private final static URI REPO = URI.create("mvn:net.nanthrax.test/my.features/1.0-SNAPSHOT/xml");
     private final static String FEATURE = "test";
     private final static String FEATURE_VERSION = "1.0-SNAPSHOT";
-    private final static String CONFIG_PID = "my.config";
+    private final static String CONFIG_PID = "persistentId";
 
     private FeaturesService featuresService;
     private ConfigurationAdmin configurationAdmin;
@@ -40,6 +41,7 @@ public class Runner {
     }
 
     public void init() throws Exception {
+        System.out.println("Runner.init");
         featuresService.addRepository(REPO, false);
 
         Feature feature = featuresService.getFeature(FEATURE, FEATURE_VERSION);
@@ -56,12 +58,15 @@ public class Runner {
         for (Map.Entry entry : properties.entrySet()) {
             dictionary.put(entry.getKey().toString(), entry.getValue());
         }
+        System.out.println("before configuration.update");
         configuration.update(dictionary);
-
+        System.out.println("before featuresService.installFeature");
         featuresService.installFeature(FEATURE, FEATURE_VERSION);
+        System.out.println("after featuresService.installFeature");
     }
 
     public void destroy() throws Exception {
+        System.out.println("Runner.destroy");
         featuresService.uninstallFeature(FEATURE, FEATURE_VERSION);
 
         Configuration configuration = configurationAdmin.getConfiguration(CONFIG_PID, null);

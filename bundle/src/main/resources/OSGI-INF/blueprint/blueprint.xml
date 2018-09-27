@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <cm-properties persistent-id="my.config" id="my.config" xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.2.0"/>
+    <cm-properties persistent-id="persistentId" id="my.config" xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.2.0"/>
 
     <bean id="my.bundle" class="net.nanthrax.test.blueprint.MyBundle" init-method="init">
         <property name="properties" ref="my.config"/>

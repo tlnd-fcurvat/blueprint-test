@@ -18,18 +18,21 @@ public class MyBundle {
         if (properties == null) {
             throw new IllegalStateException("Properties is null");
         }
-        if (properties.get("TST1") == null) {
-            throw new IllegalStateException("TST1 is null");
+        for (int i = 1; i <= 50; i++) {
+            if (properties.get("TST" + i) == null) {
+                throw new IllegalStateException("TST" + i + " is null");
+            }
+            if (properties.get("TST" + i).equals("")) {
+                throw new IllegalStateException("TST" + i + " is empty");
+            }
+            if (!properties.get("TST" + i).equals("VL" + i)) {
+                throw new IllegalStateException("TST" + i + "/VL" + i + " not match");
+            }
         }
-        if (properties.get("TST2") == null) {
-            throw new IllegalStateException("TST2 is null");
+        for (int i = 1; i <= 50; i++) {
+            System.out.println("= TST" + i + "=" + properties.get("TST" + i));
         }
-        if (!properties.get("TST1").equals("VL1")) {
-            throw new IllegalStateException("TST1/VL1 not match");
-        }
-        if (!properties.get("TST2").equals("VL2")) {
-            throw new IllegalStateException("TST2/VL2 not match");
-        }
-        System.out.println("ALL OK");
+        System.out.println("===> ALL OK");
+
     }
 }
