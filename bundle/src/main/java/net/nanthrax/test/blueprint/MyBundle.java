@@ -9,15 +9,17 @@ public class MyBundle {
     public Map<String, String> getProperties() {
         return properties;
     }
-
-    public void setProperties(Map<String, String> properties) {
+    
+    public void update(Map<String, String> properties) {
         this.properties = properties;
+        System.out.println("!!!Config updated!!!");
     }
 
     public void init() {
         if (properties == null) {
             throw new IllegalStateException("Properties is null");
         }
+        //System.out.println("all properties : " + properties.toString());
         for (int i = 1; i <= 50; i++) {
             if (properties.get("TST" + i) == null) {
                 throw new IllegalStateException("TST" + i + " is null");
