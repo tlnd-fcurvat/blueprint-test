@@ -3,8 +3,10 @@ package net.nanthrax.test.blueprint.runner;
 import org.apache.karaf.features.ConfigInfo;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.cm.ConfigurationListener;
 
 import java.net.URI;
 import java.util.Dictionary;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 public class Runner {
 
@@ -22,6 +25,7 @@ public class Runner {
 
     private FeaturesService featuresService;
     private ConfigurationAdmin configurationAdmin;
+    private BundleContext bundleContext;
 
     public FeaturesService getFeaturesService() {
         return featuresService;
@@ -37,6 +41,10 @@ public class Runner {
 
     public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
         this.configurationAdmin = configurationAdmin;
+    }
+
+    public void setBundleContext(BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
     }
 
     public void init() throws Exception {
@@ -56,9 +64,22 @@ public class Runner {
         for (Map.Entry entry : properties.entrySet()) {
             dictionary.put(entry.getKey().toString(), entry.getValue());
         }
-        configuration.update(dictionary);
 
-        featuresService.installFeature(FEATURE, FEATURE_VERSION);
+        bundleContext.registerService(ConfigurationListener.class, getConfigurationListener(), null);
+
+        configuration.update(dictionary);
+    }
+
+    private ConfigurationListener getConfigurationListener() {
+        return event -> {
+            if (event.getPid().equals(CONFIG_PID) && event.getType() == 1) {
+                try {
+                    featuresService.installFeature(FEATURE, FEATURE_VERSION);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     public void destroy() throws Exception {
